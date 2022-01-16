@@ -264,11 +264,18 @@ export class MarksExerciseModalComponent
   }
 
   resetForm(mark?: Mark): void {
-    if (this.ngFormReturned) {
-      this.genericForm.modelData = cloneDeep(mark);
-      this.ngFormReturned.setValue(cloneDeep(mark) ?? {});
-    } else {
-      this.genericForm.modelData = cloneDeep(mark) ?? {};
+    let markToSet = cloneDeep(mark) ?? {
+      user: this.userId,
+      exercise: this.exercise._id,
+      isLatestUsed: false,
+    };
+    if (mark) {
+      delete markToSet._id;
+      delete markToSet.date;
+      delete (markToSet as any).__v;
+      markToSet.isLatestUsed = false;
     }
+    this.mark = markToSet;
+    this.genericForm.modelData = this.mark;
   }
 }
